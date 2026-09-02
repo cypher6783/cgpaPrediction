@@ -38,7 +38,7 @@ class Student(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
-    student_id = db.Column(db.String(50), unique=True, nullable=False)
+    student_id = db.Column(db.String(50), nullable=False)
     full_name = db.Column(db.String(150), nullable=False)
     age = db.Column(db.Integer, nullable=True)
     gender = db.Column(db.String(10), nullable=True)

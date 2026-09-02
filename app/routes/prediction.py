@@ -38,22 +38,31 @@ def predict():
         student_name = request.form.get("student_name", "Unknown")
         student_id = request.form.get("student_id_number", "N/A")
 
-        student = Student(
-            full_name=student_name,
-            student_id=student_id,
-            age=20,
-            gender="N/A",
-            attendance_rate=max(0, 100 - data["absences"] * 2),
-            study_hours_per_week=data["studytime"] * 5,
-            previous_gpa=data["first_year_cgpa"],
-            assignment_score=data["first_year_cgpa"] * 25,
-            midterm_score=data["first_year_cgpa"] * 25,
-            predicted_gpa=float(result["predicted_gpa"]),
-            predicted_category=result["category"],
-        )
-        if current_user.is_student():
-            student.user_id = current_user.id
-        db.session.add(student)
+        student = Student.query.filter_by(student_id=student_id).first()
+        if student:
+            student.full_name = student_name
+            student.attendance_rate = max(0, 100 - data["absences"] * 2)
+            student.study_hours_per_week = data["studytime"] * 5
+            student.previous_gpa = data["first_year_cgpa"]
+            student.predicted_gpa = float(result["predicted_gpa"])
+            student.predicted_category = result["category"]
+        else:
+            student = Student(
+                full_name=student_name,
+                student_id=student_id,
+                age=20,
+                gender="N/A",
+                attendance_rate=max(0, 100 - data["absences"] * 2),
+                study_hours_per_week=data["studytime"] * 5,
+                previous_gpa=data["first_year_cgpa"],
+                assignment_score=data["first_year_cgpa"] * 20,
+                midterm_score=data["first_year_cgpa"] * 20,
+                predicted_gpa=float(result["predicted_gpa"]),
+                predicted_category=result["category"],
+            )
+            if current_user.is_student():
+                student.user_id = current_user.id
+            db.session.add(student)
         db.session.commit()
 
         log = PredictionLog(
