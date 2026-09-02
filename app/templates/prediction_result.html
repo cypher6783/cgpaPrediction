@@ -23,7 +23,9 @@
         <table class="info-table">
             <tr><td>Student ID</td><td>{{ student.student_id }}</td></tr>
             <tr><td>Name</td><td>{{ student.full_name }}</td></tr>
-            <tr><td>Date</td><td>{{ student.created_at.strftime('%Y-%m-%d %H:%M') }}</td></tr>
+            <tr><td>1st Year CGPA</td><td><strong>{{ "%.2f"|format(student.previous_gpa) }}</strong></td></tr>
+            <tr><td>Weekly Study Hours</td><td>{{ student.study_hours_per_week }} hrs/week</td></tr>
+            <tr><td>Date</td><td>{{ student.created_at.strftime('%Y-%m-%d %H:%M') if student.created_at else 'Just now' }}</td></tr>
         </table>
 
         <div class="action-buttons">

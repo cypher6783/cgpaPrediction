@@ -1,11 +1,18 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_wtf.csrf import CSRFProtect
+try:
+    from flask import Flask
+    from flask_sqlalchemy import SQLAlchemy
+    from flask_login import LoginManager
+    from flask_wtf.csrf import CSRFProtect
 
-db = SQLAlchemy()
-login_manager = LoginManager()
-csrf = CSRFProtect()
+    db = SQLAlchemy()
+    login_manager = LoginManager()
+    csrf = CSRFProtect()
+    HAS_FLASK = True
+except ImportError:
+    db = None
+    login_manager = None
+    csrf = None
+    HAS_FLASK = False
 
 
 def create_app(config_class=None):

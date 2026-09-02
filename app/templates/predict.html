@@ -22,116 +22,38 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Age</label>
-                    <input type="number" name="age" value="20" min="15" max="30" required>
+                    <label>1st Year Recorded CGPA (0.00 - 4.00)</label>
+                    <input type="number" name="first_year_cgpa" value="3.00" min="0.00" max="4.00" step="0.01" required placeholder="e.g. 3.25">
                 </div>
                 <div class="form-group">
-                    <label>Gender</label>
-                    <select name="sex">
-                        <option value="M">Male</option>
-                        <option value="F">Female</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Address</label>
-                    <select name="address">
-                        <option value="U">Urban</option>
-                        <option value="R">Rural</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Study Time (1-4)</label>
-                    <select name="studytime">
-                        <option value="1">1 - < 2 hours</option>
+                    <label>Weekly Study Time</label>
+                    <select name="studytime" required>
+                        <option value="1">1 - Less than 2 hours</option>
                         <option value="2" selected>2 - 2 to 5 hours</option>
                         <option value="3">3 - 5 to 10 hours</option>
-                        <option value="4">4 - > 10 hours</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Failures (0-4)</label>
-                    <input type="number" name="failures" value="0" min="0" max="4">
-                </div>
-                <div class="form-group">
-                    <label>Absences</label>
-                    <input type="number" name="absences" value="0" min="0" max="93">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Midterm Score (G1, 0-20)</label>
-                    <input type="number" name="midterm_score" value="12" min="0" max="20" step="0.5">
-                </div>
-                <div class="form-group">
-                    <label>Assignment Score (G2, 0-20)</label>
-                    <input type="number" name="assignment_score" value="12" min="0" max="20" step="0.5">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Mother's Education (Medu, 0-4)</label>
-                    <select name="medu">
-                        <option value="0">0 - None</option>
-                        <option value="1">1 - Primary</option>
-                        <option value="2">2 - 5th-9th grade</option>
-                        <option value="3">3 - Secondary</option>
-                        <option value="4" selected>4 - Higher</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Father's Education (Fedu, 0-4)</label>
-                    <select name="fedu">
-                        <option value="0">0 - None</option>
-                        <option value="1">1 - Primary</option>
-                        <option value="2">2 - 5th-9th grade</option>
-                        <option value="3">3 - Secondary</option>
-                        <option value="4" selected>4 - Higher</option>
+                        <option value="4">4 - More than 10 hours</option>
                     </select>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Family Relations (1-5)</label>
-                    <input type="number" name="famrel" value="4" min="1" max="5">
+                    <label>Total Class Absences</label>
+                    <input type="number" name="absences" value="2" min="0" max="100" required placeholder="Number of missed lectures">
                 </div>
                 <div class="form-group">
-                    <label>Free Time (1-5)</label>
-                    <input type="number" name="freetime" value="3" min="1" max="5">
-                </div>
-                <div class="form-group">
-                    <label>Going Out (1-5)</label>
-                    <input type="number" name="goout" value="3" min="1" max="5">
+                    <label>Past Course Failures</label>
+                    <input type="number" name="failures" value="0" min="0" max="10" required placeholder="0 for none">
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Weekday Alcohol (1-5)</label>
-                    <input type="number" name="dalc" value="1" min="1" max="5">
-                </div>
-                <div class="form-group">
-                    <label>Weekend Alcohol (1-5)</label>
-                    <input type="number" name="walc" value="1" min="1" max="5">
-                </div>
-                <div class="form-group">
-                    <label>Health (1-5)</label>
-                    <input type="number" name="health" value="4" min="1" max="5">
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Predict Performance</button>
+            <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Predict Final CGPA</button>
         </form>
     </div>
 
     <div class="card">
         <h2>Batch Upload (CSV)</h2>
-        <p class="help-text">Upload a CSV file with student data to get predictions for multiple students at once.</p>
+        <p class="help-text">Upload a CSV file containing 1st year student records to predict final CGPAs in bulk.</p>
         <form method="POST" action="{{ url_for('prediction.upload_csv') }}" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
@@ -143,8 +65,8 @@
 
         <div class="csv-format-info">
             <h3>Expected CSV Format</h3>
-            <p>Your CSV should contain these columns:</p>
-            <code>age, sex, address, studytime, failures, absences, G1, G2, Medu, Fedu, famrel, freetime, goout, Dalc, Walc, health</code>
+            <p>Your CSV should contain the following academic columns:</p>
+            <code>first_year_cgpa, studytime, absences, failures</code>
             <p><a href="{{ url_for('static', filename='sample_data.csv') }}">Download sample CSV</a></p>
         </div>
     </div>

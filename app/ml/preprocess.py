@@ -1,7 +1,41 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+
+try:
+    from sklearn.model_selection import train_test_split
+    from sklearn.preprocessing import LabelEncoder, StandardScaler
+except ImportError:
+    class StandardScaler:
+        def fit_transform(self, X):
+            X_arr = np.asarray(X, dtype=float)
+            self.mean_ = np.mean(X_arr, axis=0)
+            self.scale_ = np.std(X_arr, axis=0)
+            self.scale_[self.scale_ == 0] = 1.0
+            return (X_arr - self.mean_) / self.scale_
+
+        def transform(self, X):
+            X_arr = np.asarray(X, dtype=float)
+            mean = getattr(self, "mean_", np.mean(X_arr, axis=0))
+            scale = getattr(self, "scale_", np.std(X_arr, axis=0))
+            scale = np.where(scale == 0, 1.0, scale)
+            return (X_arr - mean) / scale
+
+    def train_test_split(X, y, test_size=0.2, random_state=42):
+        np.random.seed(random_state)
+        n = len(X)
+        shuffled_indices = np.random.permutation(n)
+        test_set_size = int(n * test_size)
+        test_indices = shuffled_indices[:test_set_size]
+        train_indices = shuffled_indices[test_set_size:]
+        return X[train_indices], X[test_indices], y[train_indices], y[test_indices]
+
+    class LabelEncoder:
+        def fit_transform(self, y):
+            self.classes_ = np.unique(y)
+            return np.searchsorted(self.classes_, y)
+
+        def transform(self, y):
+            return np.searchsorted(getattr(self, "classes_", np.unique(y)), y)
 
 
 def load_uci_dataset(filepath):
@@ -14,85 +48,67 @@ def load_uci_dataset(filepath):
 
 
 def engineer_features(df):
-    """Add interaction and derived features that improve prediction."""
+    """Add interaction features for post-1st year academic performance."""
     df = df.copy()
 
-    # Parent education average
-    if "Medu" in df.columns and "Fedu" in df.columns:
-        df["parent_edu_avg"] = (df["Medu"] + df["Fedu"]) / 2
+    # Calculate 1st Year CGPA if missing but G1 and G2 exist
+    if "first_year_cgpa" not in df.columns:
+        if "G1" in df.columns and "G2" in df.columns:
+            df["first_year_cgpa"] = ((df["G1"] + df["G2"]) / 40.0) * 4.0
+        elif "previous_gpa" in df.columns:
+            df["first_year_cgpa"] = df["previous_gpa"]
+        else:
+            df["first_year_cgpa"] = 2.50
 
     # Study effort score
     if "studytime" in df.columns and "failures" in df.columns:
         df["study_effort"] = df["studytime"] - df["failures"] * 0.5
-
-    # Alcohol index
-    if "Dalc" in df.columns and "Walc" in df.columns:
-        df["alcohol_index"] = df["Dalc"] * 0.4 + df["Walc"] * 0.6
-
-    # Social vs study balance
-    if "goout" in df.columns and "studytime" in df.columns:
-        df["social_study_ratio"] = df["goout"] / (df["studytime"] + 0.1)
-
-    # Absence rate impact
-    if "absences" in df.columns:
-        df["absence_impact"] = df["absences"].apply(
-            lambda x: 0 if x <= 3 else (1 if x <= 10 else (2 if x <= 20 else 3))
-        )
-
-    # Health-study interaction
-    if "health" in df.columns and "studytime" in df.columns:
-        df["health_study"] = df["health"] * df["studytime"]
+    else:
+        df["study_effort"] = df.get("studytime", 2)
 
     return df
 
 
 def preprocess_student_data(df, target_col="G3"):
     """
-    Preprocess student data with feature engineering.
+    Preprocess student data using selected academic features (Post-1st Year).
+    Selected Features: 1st Year CGPA, Study Time, Absences, Past Failures, Study Effort.
     Returns: X_train, X_test, y_train, y_test, scaler, label_encoders, feature_names
     """
     df = df.copy()
 
-    # Convert G3 (0-20) to GPA (0.0-4.0)
+    # Target variable: Final GPA (0.00 - 4.00 scale)
     if target_col in df.columns and df[target_col].max() <= 20:
         df["GPA"] = df[target_col] / 5.0
+        y = df["GPA"].values
+    elif "GPA" in df.columns:
         y = df["GPA"].values
     else:
         y = df[target_col].values
 
-    # Drop target and intermediate grades (G1, G2 are not available at prediction time)
-    drop_cols = [c for c in [target_col, "G1", "G2", "GPA"] if c in df.columns]
-    X = df.drop(columns=drop_cols, errors="ignore")
-
     # Feature engineering
-    X = engineer_features(X)
+    df = engineer_features(df)
 
-    # Encode categorical columns
-    label_encoders = {}
-    categorical_cols = X.select_dtypes(include=["object"]).columns
-    for col in categorical_cols:
-        le = LabelEncoder()
-        X[col] = le.fit_transform(X[col].astype(str))
-        label_encoders[col] = le
+    # Restrict strictly to selected academic feature set
+    selected_academic_cols = [
+        "first_year_cgpa",
+        "studytime",
+        "absences",
+        "failures",
+        "study_effort",
+    ]
+
+    for col in selected_academic_cols:
+        if col not in df.columns:
+            df[col] = 0.0
+
+    X = df[selected_academic_cols].copy()
 
     # Fill missing values
     X = X.fillna(X.median(numeric_only=True))
 
-    # Remove low-variance features
-    from sklearn.feature_selection import VarianceThreshold
-    var_selector = VarianceThreshold(threshold=0.01)
-    X_array = var_selector.fit_transform(X.values)
-    kept_mask = var_selector.get_support()
-    kept_columns = X.columns[kept_mask].tolist()
-    X = pd.DataFrame(X_array, columns=kept_columns)
-
-    # Correlation-based feature selection — drop highly correlated pairs
-    corr_matrix = X.corr().abs()
-    upper = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
-    drop_correlated = [col for col in upper.columns if any(upper[col] > 0.92)]
-    X = X.drop(columns=drop_correlated, errors="ignore")
-
     feature_names = X.columns.tolist()
+    label_encoders = {}  # All selected academic features are numeric
 
     # Scale features
     scaler = StandardScaler()

@@ -23,22 +23,10 @@ prediction_bp = Blueprint("prediction", __name__)
 def predict():
     if request.method == "POST":
         data = {
-            "age": float(request.form.get("age", 20)),
-            "sex": request.form.get("sex", "M"),
-            "address": request.form.get("address", "U"),
+            "first_year_cgpa": float(request.form.get("first_year_cgpa", 3.0)),
             "studytime": float(request.form.get("studytime", 2)),
-            "failures": float(request.form.get("failures", 0)),
             "absences": float(request.form.get("absences", 0)),
-            "G1": float(request.form.get("midterm_score", 12)),
-            "G2": float(request.form.get("assignment_score", 12)),
-            "Medu": float(request.form.get("medu", 2)),
-            "Fedu": float(request.form.get("fedu", 2)),
-            "famrel": float(request.form.get("famrel", 4)),
-            "freetime": float(request.form.get("freetime", 3)),
-            "goout": float(request.form.get("goout", 3)),
-            "Dalc": float(request.form.get("dalc", 1)),
-            "Walc": float(request.form.get("walc", 1)),
-            "health": float(request.form.get("health", 4)),
+            "failures": float(request.form.get("failures", 0)),
         }
 
         try:
@@ -53,13 +41,13 @@ def predict():
         student = Student(
             full_name=student_name,
             student_id=student_id,
-            age=int(data["age"]),
-            gender=data["sex"],
-            attendance_rate=100 - data["absences"],
+            age=20,
+            gender="N/A",
+            attendance_rate=max(0, 100 - data["absences"] * 2),
             study_hours_per_week=data["studytime"] * 5,
-            previous_gpa=data["G1"] / 5.0,
-            assignment_score=data["G2"] / 20 * 100,
-            midterm_score=data["G1"] / 20 * 100,
+            previous_gpa=data["first_year_cgpa"],
+            assignment_score=data["first_year_cgpa"] * 25,
+            midterm_score=data["first_year_cgpa"] * 25,
             predicted_gpa=float(result["predicted_gpa"]),
             predicted_category=result["category"],
         )

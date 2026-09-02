@@ -64,7 +64,7 @@ def create_realistic_dataset():
         "Mjob", "Fjob", "reason", "guardian", "traveltime", "studytime", "failures",
         "schoolsup", "famsup", "activities", "higher", "internet", "romantic",
         "famrel", "freetime", "goout", "Dalc", "Walc", "health", "absences",
-        "G1", "G2", "G3"
+        "G1", "G2", "G3", "first_year_cgpa"
     ]
 
     random.seed(42)
@@ -114,6 +114,8 @@ def create_realistic_dataset():
         g2 = max(0, min(20, int(round(0.4 * base + 0.6 * g1 + random.gauss(0, 1.2)))))
         # G3 = heavily weighted on G2 + small base component
         g3 = max(0, min(20, int(round(0.2 * base + 0.8 * g2 + random.gauss(0, 0.8)))))
+        # 1st Year CGPA (0.00 to 4.00 scale)
+        first_year_cgpa = round(((g1 + g2) / 40.0) * 4.0, 2)
 
         row = [
             random.choice(["GP", "MS"]),
@@ -136,7 +138,7 @@ def create_realistic_dataset():
             internet,
             random.choice(["yes", "no"]),
             famrel, freetime, goout, dalc, walc, health, absences,
-            g1, g2, g3,
+            g1, g2, g3, first_year_cgpa
         ]
         rows.append(row)
 

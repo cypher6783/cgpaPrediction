@@ -26,7 +26,7 @@ def predict_student_performance(student_data):
     category = gpa_to_category(predicted_gpa)
 
     return {
-        "predicted_gpa": round(predicted_gpa, 2),
+        "predicted_gpa": round(float(predicted_gpa), 2),
         "category": category,
     }
 
