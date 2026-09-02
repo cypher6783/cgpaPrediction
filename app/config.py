@@ -9,7 +9,7 @@ except ImportError:
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
     SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL", "postgresql://postgres:asphalt6@localhost:5432/msendoo_prediction"
+        "DATABASE_URL", f"sqlite:///{os.path.join(os.path.dirname(os.path.dirname(__file__)), 'app.db')}"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
