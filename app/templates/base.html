@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}CGPA Predictor System{% endblock %}</title>
+    <title>{% block title %}EduForecast - Student Performance Intelligence{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     {% if current_user.is_authenticated %}
     <nav class="navbar">
         <div class="nav-brand">
-            <a href="{{ url_for('dashboard.index') }}">CGPA Predictor</a>
+            <a href="{{ url_for('dashboard.index') }}">🎓 EduForecast</a>
         </div>
         <div class="nav-links">
             <a href="{{ url_for('dashboard.index') }}">Dashboard</a>

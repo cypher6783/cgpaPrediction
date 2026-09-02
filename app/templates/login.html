@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Login - CGPA Predictor{% endblock %}
+{% block title %}Login - EduForecast{% endblock %}
 {% block content %}
 <div class="auth-container">
     <div class="auth-card">
-        <h1>Login</h1>
+        <h1>🎓 EduForecast Login</h1>
         <form method="POST" action="{{ url_for('auth.login') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
