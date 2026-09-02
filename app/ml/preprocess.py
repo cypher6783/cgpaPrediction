@@ -51,14 +51,14 @@ def engineer_features(df):
     """Add interaction features for post-1st year academic performance."""
     df = df.copy()
 
-    # Calculate 1st Year CGPA if missing but G1 and G2 exist
+    # Calculate 1st Year CGPA (5.0 scale) if missing but G1 and G2 exist
     if "first_year_cgpa" not in df.columns:
         if "G1" in df.columns and "G2" in df.columns:
-            df["first_year_cgpa"] = ((df["G1"] + df["G2"]) / 40.0) * 4.0
+            df["first_year_cgpa"] = ((df["G1"] + df["G2"]) / 40.0) * 5.0
         elif "previous_gpa" in df.columns:
             df["first_year_cgpa"] = df["previous_gpa"]
         else:
-            df["first_year_cgpa"] = 2.50
+            df["first_year_cgpa"] = 3.50
 
     # Study effort score
     if "studytime" in df.columns and "failures" in df.columns:
@@ -72,14 +72,14 @@ def engineer_features(df):
 def preprocess_student_data(df, target_col="G3"):
     """
     Preprocess student data using selected academic features (Post-1st Year).
-    Selected Features: 1st Year CGPA, Study Time, Absences, Past Failures, Study Effort.
+    Selected Features: 1st Year CGPA (5.0 scale), Study Time, Absences, Past Failures, Study Effort.
     Returns: X_train, X_test, y_train, y_test, scaler, label_encoders, feature_names
     """
     df = df.copy()
 
-    # Target variable: Final GPA (0.00 - 4.00 scale)
+    # Target variable: Final GPA (0.00 - 5.00 scale)
     if target_col in df.columns and df[target_col].max() <= 20:
-        df["GPA"] = df[target_col] / 5.0
+        df["GPA"] = (df[target_col] / 20.0) * 5.0
         y = df["GPA"].values
     elif "GPA" in df.columns:
         y = df["GPA"].values
@@ -151,12 +151,12 @@ def preprocess_single_student(data_dict, scaler, label_encoders, feature_names):
 
 
 def gpa_to_category(gpa):
-    """Convert continuous GPA to performance category."""
-    if gpa >= 3.5:
+    """Convert continuous GPA (5.0 scale) to academic performance category."""
+    if gpa >= 4.50:
         return "Excellent"
-    elif gpa >= 3.0:
+    elif gpa >= 3.50:
         return "Good"
-    elif gpa >= 2.0:
+    elif gpa >= 2.40:
         return "Average"
     else:
         return "Poor"

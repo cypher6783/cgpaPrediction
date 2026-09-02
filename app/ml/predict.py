@@ -21,8 +21,8 @@ def predict_student_performance(student_data):
     X = preprocess_single_student(student_data, scaler, label_encoders, feature_names)
     predicted_gpa = model.predict(X)[0]
 
-    # Clamp GPA to valid range
-    predicted_gpa = max(0.0, min(4.0, predicted_gpa))
+    # Clamp GPA to valid 5.0 range
+    predicted_gpa = max(0.0, min(5.0, predicted_gpa))
     category = gpa_to_category(predicted_gpa)
 
     return {
@@ -56,7 +56,7 @@ def predict_batch(students_df):
         data_dict = row.to_dict()
         X = preprocess_single_student(data_dict, scaler, label_encoders, feature_names)
         gpa = model.predict(X)[0]
-        gpa = max(0.0, min(4.0, gpa))
+        gpa = max(0.0, min(5.0, gpa))
         predictions.append({
             "predicted_gpa": round(gpa, 2),
             "category": gpa_to_category(gpa),

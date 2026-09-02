@@ -23,7 +23,7 @@ prediction_bp = Blueprint("prediction", __name__)
 def predict():
     if request.method == "POST":
         data = {
-            "first_year_cgpa": float(request.form.get("first_year_cgpa", 3.0)),
+            "first_year_cgpa": float(request.form.get("first_year_cgpa", 3.5)),
             "studytime": float(request.form.get("studytime", 2)),
             "absences": float(request.form.get("absences", 0)),
             "failures": float(request.form.get("failures", 0)),

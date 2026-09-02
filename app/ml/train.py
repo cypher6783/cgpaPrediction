@@ -31,7 +31,7 @@ class FallbackAcademicRegressor:
     def predict(self, X):
         X_arr = np.asarray(X, dtype=float)
         preds = np.dot(X_arr, self.weights) + self.bias
-        return np.clip(preds, 0.0, 4.0)
+        return np.clip(preds, 0.0, 5.0)
 
 try:
     from sklearn.tree import DecisionTreeRegressor
@@ -88,11 +88,11 @@ try:
     from app.ml.preprocess import gpa_to_category
 except Exception:
     def gpa_to_category(gpa):
-        if gpa >= 3.5:
+        if gpa >= 4.50:
             return "Excellent"
-        elif gpa >= 3.0:
+        elif gpa >= 3.50:
             return "Good"
-        elif gpa >= 2.0:
+        elif gpa >= 2.40:
             return "Average"
         else:
             return "Poor"
