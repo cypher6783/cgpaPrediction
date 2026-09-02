@@ -17,7 +17,6 @@
             <a href="{{ url_for('prediction.predict') }}">Predict</a>
             <a href="{{ url_for('prediction.history') }}">History</a>
             {% if current_user.is_admin() %}
-            <a href="{{ url_for('prediction.train_model_view') }}">Train Model</a>
             <a href="{{ url_for('admin.manage_users') }}">Users</a>
             <a href="{{ url_for('admin.manage_students') }}">Students</a>
             {% endif %}
