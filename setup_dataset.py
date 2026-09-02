@@ -108,14 +108,26 @@ def create_realistic_dataset():
             - (1 if schoolsup == "yes" else 0)  # schoolsup = struggling student
         )
 
-        # G1 = base + noise
-        g1 = max(0, min(20, int(round(base + random.gauss(0, 1.8)))))
-        # G2 = weighted average of base and G1 (students improve/decline)
-        g2 = max(0, min(20, int(round(0.4 * base + 0.6 * g1 + random.gauss(0, 1.2)))))
-        # G3 = heavily weighted on G2 + small base component
-        g3 = max(0, min(20, int(round(0.2 * base + 0.8 * g2 + random.gauss(0, 0.8)))))
-        # 1st Year CGPA (0.00 to 5.00 scale)
-        first_year_cgpa = round(((g1 + g2) / 40.0) * 5.0, 2)
+        # 1st Year CGPA distribution across university students (0.00 to 5.00 scale)
+        first_year_cgpa = round(random.gauss(3.30, 0.70), 2)
+        first_year_cgpa = max(1.00, min(5.00, first_year_cgpa))
+
+        # Academic growth / progression to 300L & Final CGPA:
+        # Diligent study (+), zero failures (+), and upper-level course focus lead to CGPA growth (e.g. 3.96 -> 4.38)
+        growth = (
+            (studytime - 2) * 0.14
+            - failures * 0.35
+            - absences * 0.015
+            + random.gauss(0.18, 0.10)
+        )
+
+        final_cgpa_val = first_year_cgpa + growth
+        final_cgpa_val = max(1.00, min(5.00, round(final_cgpa_val, 2)))
+
+        # Convert to 0-20 scale for dataset consistency
+        g1 = int(round((first_year_cgpa / 5.0) * 20))
+        g2 = int(round((first_year_cgpa / 5.0) * 20))
+        g3 = int(round((final_cgpa_val / 5.0) * 20))
 
         row = [
             random.choice(["GP", "MS"]),
