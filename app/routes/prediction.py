@@ -35,8 +35,8 @@ def predict():
             flash("Model not trained yet. Please train the model first.", "warning")
             return redirect(url_for("prediction.train_model_view"))
 
-        student_name = request.form.get("student_name", "Unknown")
-        student_id = request.form.get("student_id_number", "N/A")
+        student_name = request.form.get("student_name", "Unknown").strip().title()
+        student_id = request.form.get("student_id_number", "N/A").strip().upper()
 
         student = Student.query.filter_by(student_id=student_id).first()
         if student:
