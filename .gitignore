@@ -1,0 +1,29 @@
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment configuration & secrets
+.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS OS files
+.DS_Store
+Thumbs.db

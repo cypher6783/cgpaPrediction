@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Train Model - Msendoo Prediction{% endblock %}
+{% block content %}
+<h1>Train Hybrid Model</h1>
+
+<div class="card">
+    <h2>Model Training</h2>
+    <p>This will train the Decision Tree + Random Forest Voting Ensemble model using the UCI Student Performance dataset.</p>
+    <p><strong>Dataset:</strong> data/student-mat.csv</p>
+    <p><strong>Model:</strong> Voting Regressor (Decision Tree + Random Forest)</p>
+    <p><strong>Evaluation:</strong> MAE, RMSE, R2, Accuracy, Precision, Recall, F1-Score</p>
+
+    <form method="POST" action="{{ url_for('prediction.train_model_view') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-primary">Start Training</button>
+    </form>
+</div>
+{% endblock %}

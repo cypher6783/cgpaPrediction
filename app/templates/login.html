@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Login - Msendoo Prediction{% endblock %}
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Login</h1>
+        <form method="POST" action="{{ url_for('auth.login') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Login</button>
+        </form>
+        <p class="auth-link">Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+    </div>
+</div>
+{% endblock %}

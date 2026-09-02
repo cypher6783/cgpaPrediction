@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Prediction Result - Msendoo Prediction{% endblock %}
+{% block content %}
+<h1>Prediction Result</h1>
+
+<div class="grid-2">
+    <div class="card result-card">
+        <h2>Prediction</h2>
+        <div class="result-display">
+            <div class="result-gpa">
+                <span class="label">Predicted GPA</span>
+                <span class="value">{{ result.predicted_gpa }}</span>
+            </div>
+            <div class="result-category">
+                <span class="label">Performance Category</span>
+                <span class="badge badge-lg badge-{{ result.category|lower }}">{{ result.category }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Student Information</h2>
+        <table class="info-table">
+            <tr><td>Student ID</td><td>{{ student.student_id }}</td></tr>
+            <tr><td>Name</td><td>{{ student.full_name }}</td></tr>
+            <tr><td>Date</td><td>{{ student.created_at.strftime('%Y-%m-%d %H:%M') }}</td></tr>
+        </table>
+
+        <div class="action-buttons">
+            <a href="{{ url_for('prediction.predict') }}" class="btn btn-primary">New Prediction</a>
+            <a href="{{ url_for('prediction.history') }}" class="btn btn-secondary">View History</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

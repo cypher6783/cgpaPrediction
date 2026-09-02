@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Prediction History - Msendoo Prediction{% endblock %}
+{% block content %}
+<h1>Prediction History</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h2>All Predictions</h2>
+        <a href="{{ url_for('prediction.export_csv') }}" class="btn btn-secondary">Export CSV</a>
+    </div>
+
+    {% if students %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Attendance</th>
+                <th>Previous GPA</th>
+                <th>Predicted GPA</th>
+                <th>Category</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.student_id }}</td>
+                <td>{{ student.full_name }}</td>
+                <td>{{ student.age }}</td>
+                <td>{{ student.gender }}</td>
+                <td>{{ student.attendance_rate }}%</td>
+                <td>{{ student.previous_gpa }}</td>
+                <td><strong>{{ student.predicted_gpa }}</strong></td>
+                <td>
+                    <span class="badge badge-{{ student.predicted_category|lower }}">
+                        {{ student.predicted_category }}
+                    </span>
+                </td>
+                <td>{{ student.created_at.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No predictions yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Msendoo Prediction System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% if current_user.is_authenticated %}
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="{{ url_for('dashboard.index') }}">Msendoo Prediction</a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard.index') }}">Dashboard</a>
+            <a href="{{ url_for('prediction.predict') }}">Predict</a>
+            <a href="{{ url_for('prediction.history') }}">History</a>
+            {% if current_user.is_admin() %}
+            <a href="{{ url_for('prediction.train_model_view') }}">Train Model</a>
+            <a href="{{ url_for('admin.manage_users') }}">Users</a>
+            <a href="{{ url_for('admin.manage_students') }}">Students</a>
+            {% endif %}
+            <span class="nav-user">{{ current_user.full_name }} ({{ current_user.role }})</span>
+            <a href="{{ url_for('auth.logout') }}" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+    {% endif %}
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Training Results - Msendoo Prediction{% endblock %}
+{% block content %}
+<h1>Training Results</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Accuracy</h3>
+        <p class="stat-number">{{ "%.4f"|format(metrics.accuracy) }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>F1 Score</h3>
+        <p class="stat-number">{{ "%.4f"|format(metrics.f1) }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>R2 Score</h3>
+        <p class="stat-number">{{ "%.4f"|format(metrics.r2) }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>MAE</h3>
+        <p class="stat-number">{{ "%.4f"|format(metrics.mae) }}</p>
+    </div>
+</div>
+
+<div class="grid-2">
+    <div class="card">
+        <h2>Confusion Matrix</h2>
+        <img src="{{ url_for('static', filename='charts/confusion_matrix.png') }}" alt="Confusion Matrix" class="chart-img">
+    </div>
+    <div class="card">
+        <h2>Model Comparison</h2>
+        <img src="{{ url_for('static', filename='charts/model_comparison.png') }}" alt="Model Comparison" class="chart-img">
+    </div>
+</div>
+
+<div class="card">
+    <h2>Detailed Metrics</h2>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Decision Tree</th>
+                <th>Random Forest</th>
+                <th>Hybrid (Voting)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metric in ['accuracy', 'f1', 'r2', 'mae', 'rmse'] %}
+            <tr>
+                <td>{{ metric|upper }}</td>
+                <td>{{ "%.4f"|format(comparison['Decision Tree'][metric]) }}</td>
+                <td>{{ "%.4f"|format(comparison['Random Forest'][metric]) }}</td>
+                <td>{{ "%.4f"|format(comparison['Hybrid (Voting)'][metric]) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="action-buttons">
+    <a href="{{ url_for('prediction.predict') }}" class="btn btn-primary">Start Predicting</a>
+    <a href="{{ url_for('prediction.train_model_view') }}" class="btn btn-secondary">Retrain Model</a>
+</div>
+{% endblock %}

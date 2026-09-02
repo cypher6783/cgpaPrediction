@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Msendoo Prediction{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Students</h3>
+        <p class="stat-number">{{ stats.total_students }}</p>
+    </div>
+    {% if current_user.is_admin() %}
+    <div class="stat-card">
+        <h3>Total Users</h3>
+        <p class="stat-number">{{ stats.total_users }}</p>
+    </div>
+    {% endif %}
+    <div class="stat-card">
+        <h3>Predictions Made</h3>
+        <p class="stat-number">{{ stats.predictions_made }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Recent Predictions</h2>
+    {% if students %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Predicted GPA</th>
+                <th>Category</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.student_id }}</td>
+                <td>{{ student.full_name }}</td>
+                <td>{{ student.predicted_gpa }}</td>
+                <td>
+                    <span class="badge badge-{{ student.predicted_category|lower }}">
+                        {{ student.predicted_category }}
+                    </span>
+                </td>
+                <td>{{ student.created_at.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No predictions yet. <a href="{{ url_for('prediction.predict') }}">Make your first prediction</a></p>
+    {% endif %}
+</div>
+{% endblock %}
