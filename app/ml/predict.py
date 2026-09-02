@@ -22,11 +22,16 @@ def predict_student_performance(student_data):
     predicted_gpa = model.predict(X)[0]
 
     # Clamp GPA to valid 5.0 range
-    predicted_gpa = max(0.0, min(5.0, predicted_gpa))
+    predicted_gpa = max(0.0, min(5.0, float(predicted_gpa)))
+    mae_margin = 0.10
+    lower_bound = max(0.00, round(predicted_gpa - mae_margin, 2))
+    upper_bound = min(5.00, round(predicted_gpa + mae_margin, 2))
     category = gpa_to_category(predicted_gpa)
 
     return {
-        "predicted_gpa": round(float(predicted_gpa), 2),
+        "predicted_gpa": round(predicted_gpa, 2),
+        "lower_bound": lower_bound,
+        "upper_bound": upper_bound,
         "category": category,
     }
 

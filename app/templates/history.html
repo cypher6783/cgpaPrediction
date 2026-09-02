@@ -15,12 +15,10 @@
             <tr>
                 <th>Student ID</th>
                 <th>Name</th>
-                <th>Age</th>
-                <th>Gender</th>
-                <th>Attendance</th>
-                <th>Previous GPA</th>
-                <th>Predicted GPA</th>
-                <th>Category</th>
+                <th>1st Year CGPA</th>
+                <th>Weekly Study Hours</th>
+                <th>Predicted 400L CGPA</th>
+                <th>Class of Degree</th>
                 <th>Date</th>
             </tr>
         </thead>
@@ -29,17 +27,15 @@
             <tr>
                 <td>{{ student.student_id }}</td>
                 <td>{{ student.full_name }}</td>
-                <td>{{ student.age }}</td>
-                <td>{{ student.gender }}</td>
-                <td>{{ student.attendance_rate }}%</td>
-                <td>{{ student.previous_gpa }}</td>
-                <td><strong>{{ student.predicted_gpa }}</strong></td>
+                <td>{{ "%.2f"|format(student.previous_gpa) if student.previous_gpa else 'N/A' }}</td>
+                <td>{{ student.study_hours_per_week }} hrs/wk</td>
+                <td><strong>{{ "%.2f"|format(student.predicted_gpa) if student.predicted_gpa else 'N/A' }}</strong></td>
                 <td>
-                    <span class="badge badge-{{ student.predicted_category|lower }}">
+                    <span class="badge badge-primary">
                         {{ student.predicted_category }}
                     </span>
                 </td>
-                <td>{{ student.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>{{ student.created_at.strftime('%Y-%m-%d') if student.created_at else 'N/A' }}</td>
             </tr>
             {% endfor %}
         </tbody>

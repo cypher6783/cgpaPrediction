@@ -1,3 +1,13 @@
+import os
+import sys
+
+for path in [
+    r"C:\Program Files\PostgreSQL\17\pgAdmin 4\python\Lib\site-packages",
+    r"C:\Program Files\PostgreSQL\18\pgAdmin 4\python\Lib\site-packages",
+]:
+    if os.path.exists(path) and path not in sys.path:
+        sys.path.insert(0, path)
+
 try:
     from flask import Flask
     from flask_sqlalchemy import SQLAlchemy

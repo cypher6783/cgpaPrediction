@@ -151,12 +151,14 @@ def preprocess_single_student(data_dict, scaler, label_encoders, feature_names):
 
 
 def gpa_to_category(gpa):
-    """Convert continuous GPA (5.0 scale) to academic performance category."""
+    """Convert continuous GPA (5.0 scale) to official Class of Degree."""
     if gpa >= 4.50:
-        return "Excellent"
+        return "First Class"
     elif gpa >= 3.50:
-        return "Good"
+        return "Second Class Upper (2:1)"
     elif gpa >= 2.40:
-        return "Average"
+        return "Second Class Lower (2:2)"
+    elif gpa >= 1.50:
+        return "Third Class"
     else:
-        return "Poor"
+        return "Pass / Fail"

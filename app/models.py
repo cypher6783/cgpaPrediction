@@ -50,19 +50,21 @@ class Student(db.Model):
     final_score = db.Column(db.Float, nullable=True)  # percentage 0-100
     participation_score = db.Column(db.Float, nullable=True)  # percentage 0-100
     predicted_gpa = db.Column(db.Float, nullable=True)
-    predicted_category = db.Column(db.String(20), nullable=True)  # Excellent, Good, Average, Poor
+    predicted_category = db.Column(db.String(50), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def get_performance_category(self, gpa):
-        if gpa >= 3.5:
-            return "Excellent"
-        elif gpa >= 3.0:
-            return "Good"
-        elif gpa >= 2.0:
-            return "Average"
+        if gpa >= 4.50:
+            return "First Class"
+        elif gpa >= 3.50:
+            return "Second Class Upper (2:1)"
+        elif gpa >= 2.40:
+            return "Second Class Lower (2:2)"
+        elif gpa >= 1.50:
+            return "Third Class"
         else:
-            return "Poor"
+            return "Pass / Fail"
 
 
 class PredictionLog(db.Model):
@@ -71,7 +73,7 @@ class PredictionLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey("students.id"), nullable=False)
     predicted_gpa = db.Column(db.Float, nullable=False)
-    predicted_category = db.Column(db.String(20), nullable=False)
+    predicted_category = db.Column(db.String(50), nullable=False)
     model_version = db.Column(db.String(50), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

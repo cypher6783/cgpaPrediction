@@ -73,7 +73,7 @@ except ImportError:
 
     def confusion_matrix(y_true, y_pred, labels=None):
         if labels is None:
-            labels = ["Excellent", "Good", "Average", "Poor"]
+            labels = ["First Class", "Second Class Upper (2:1)", "Second Class Lower (2:2)", "Third Class", "Pass / Fail"]
         matrix = np.zeros((len(labels), len(labels)), dtype=int)
         label_to_idx = {l: i for i, l in enumerate(labels)}
         for t, p in zip(y_true, y_pred):
@@ -89,13 +89,15 @@ try:
 except Exception:
     def gpa_to_category(gpa):
         if gpa >= 4.50:
-            return "Excellent"
+            return "First Class"
         elif gpa >= 3.50:
-            return "Good"
+            return "Second Class Upper (2:1)"
         elif gpa >= 2.40:
-            return "Average"
+            return "Second Class Lower (2:2)"
+        elif gpa >= 1.50:
+            return "Third Class"
         else:
-            return "Poor"
+            return "Pass / Fail"
 
 
 def build_hybrid_model():
