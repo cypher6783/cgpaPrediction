@@ -27,7 +27,7 @@
                 <td>{{ student.predicted_gpa }}</td>
                 <td>
                     {% if student.predicted_category %}
-                    <span class="badge badge-{{ student.predicted_category|lower }}">
+                    <span class="badge badge-primary">
                         {{ student.predicted_category }}
                     </span>
                     {% else %}

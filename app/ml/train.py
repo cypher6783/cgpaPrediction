@@ -199,11 +199,13 @@ def generate_confusion_matrix(y_test_cat, y_pred_cat, save_path):
     """Generate and save confusion matrix plot."""
     if not HAS_MATPLOTLIB:
         return
-    labels = ["Excellent", "Good", "Average", "Poor"]
+    labels = ["First Class", "Second Class Upper (2:1)", "Second Class Lower (2:2)", "Third Class", "Pass / Fail"]
     cm = confusion_matrix(y_test_cat, y_pred_cat, labels=labels)
 
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(10, 8))
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=labels, yticklabels=labels)
+    plt.xticks(rotation=25, ha="right")
+    plt.yticks(rotation=0)
     plt.title("Confusion Matrix - Hybrid Model")
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
@@ -242,7 +244,7 @@ def generate_roc_chart(y_test_cat, y_pred_cat, save_path):
     from sklearn.preprocessing import label_binarize
     from sklearn.metrics import precision_recall_curve, average_precision_score
 
-    labels = ["Excellent", "Good", "Average", "Poor"]
+    labels = ["First Class", "Second Class Upper (2:1)", "Second Class Lower (2:2)", "Third Class", "Pass / Fail"]
     present_labels = [l for l in labels if l in y_test_cat or l in y_pred_cat]
 
     if len(present_labels) < 2:

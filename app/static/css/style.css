@@ -281,21 +281,35 @@ a:hover {
     padding: 0.5rem 1.5rem;
 }
 
+.badge-primary {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.badge-first-class,
 .badge-excellent {
     background: #d4edda;
     color: #155724;
 }
 
+.badge-second-class-upper,
 .badge-good {
     background: #d1ecf1;
     color: #0c5460;
 }
 
+.badge-second-class-lower,
 .badge-average {
     background: #fff3cd;
     color: #856404;
 }
 
+.badge-third-class {
+    background: #ffeeba;
+    color: #856404;
+}
+
+.badge-pass-fail,
 .badge-poor {
     background: #f8d7da;
     color: #721c24;

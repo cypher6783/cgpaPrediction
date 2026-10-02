@@ -44,7 +44,7 @@ class Student(db.Model):
     gender = db.Column(db.String(10), nullable=True)
     attendance_rate = db.Column(db.Float, nullable=True)  # percentage 0-100
     study_hours_per_week = db.Column(db.Float, nullable=True)
-    previous_gpa = db.Column(db.Float, nullable=True)  # 0.0 - 4.0
+    previous_gpa = db.Column(db.Float, nullable=True)  # 0.0 - 5.0
     assignment_score = db.Column(db.Float, nullable=True)  # percentage 0-100
     midterm_score = db.Column(db.Float, nullable=True)  # percentage 0-100
     final_score = db.Column(db.Float, nullable=True)  # percentage 0-100
